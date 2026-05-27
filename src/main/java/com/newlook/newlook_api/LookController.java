@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 // Função que diz que vai receber algum arquivo e guarda em uma variavel
 import org.springframework.web.multipart.MultipartFile;
 
-
 @RestController
 public class LookController {
 
@@ -21,9 +20,21 @@ public class LookController {
     }
 
     // Função responde REQUEST tipo POST em /makelook
-    @PostMapping("/get")
+    @PostMapping("/post/foto")
     public String makelook(@RequestParam("fotoUsuario") MultipartFile fotoUsuario) {
         return "Foto recebida: " + fotoUsuario.getOriginalFilename();
+    }
+
+    @PostMapping("/post/user/cadastro")
+    public String cadastrarUser(
+        @RequestParam("nome") String nome, 
+        @RequestParam("email") String email, 
+        @RequestParam("senha") String senha
+    ) {
+        UserMetodos User = new UserMetodos();
+        User.CadastrarUsuario(nome, email, senha);
+
+        return "Usuario cadastrado com sucesso!";
     }
 
 
