@@ -10,13 +10,15 @@ CREATE TABLE
 CREATE TABLE
     Looks (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id_usuario INTEGER NOT NULL,
         nome VARCHAR(100) NOT NULL,
         estilo VARCHAR(100) NOT NULL,
         ocasiao VARCHAR(100) NOT NULL,
         estacao_ano VARCHAR(100),
         faixa_preco DECIMAL(10, 2),
         cores_favoritas VARCHAR(100),
-        preferencias_adicionais VARCHAR(5000)
+        preferencias_adicionais VARCHAR(5000),
+        FOREIGN KEY (id_usuario) REFERENCES Usuarios (id)
     );
 
 CREATE TABLE

@@ -25,18 +25,4 @@ public class LookController {
         return "Foto recebida: " + fotoUsuario.getOriginalFilename();
     }
 
-    @PostMapping("/post/user/cadastro")
-    public String cadastrarUser(
-        @RequestParam("nome") String nome, 
-        @RequestParam("email") String email, 
-        @RequestParam("senha") String senha
-    ) {
-        UserMetodos User = new UserMetodos();
-        User.CadastrarUsuario(nome, email, senha);
-
-        return "Usuario cadastrado com sucesso!";
-    }
-
-
-
 }
