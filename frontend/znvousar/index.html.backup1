@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Gerar Looks | NewLook</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="../js/tailwind.config.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="../css/styles.css"/>
+    <style>
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spin { animation: spin 1s linear infinite; display: inline-block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.5s ease forwards; }
+
+        @keyframes pulse-bar {
+            0%, 100% { opacity: 0.4; transform: scaleX(0.97); }
+            50%       { opacity: 1;   transform: scaleX(1); }
+        }
+        .pulse-bar { animation: pulse-bar 1.6s ease-in-out infinite; }
+
+        /* look cards stagger */
+        .look-card:nth-child(1) { animation-delay: 0.05s; }
+        .look-card:nth-child(2) { animation-delay: 0.18s; }
+        .look-card:nth-child(3) { animation-delay: 0.31s; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-x-hidden">
+
+<!-- ===================== SIDEBAR ===================== -->
+<aside class="w-64 h-full fixed left-0 top-0 bg-surface border-r border-outline-variant flex flex-col py-margin-desktop px-4 gap-8 z-50">
+    <div class="font-display-lg text-headline-lg tracking-tight text-primary px-4">NewLook</div>
+    <nav class="flex flex-col gap-1">
+        <a data-nav="generate" href="index.html"
+           class="flex items-center gap-4 px-4 py-3 rounded-lg">
+            <span class="material-symbols-outlined">auto_awesome</span>
+            <span class="font-body-md">Gerar Looks</span>
+        </a>
+        <a data-nav="settings" href="settings.html"
+           class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low transition-colors duration-200">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="font-body-md">Configurações</span>
+        </a>
+    </nav>
+</aside>
+
+<!-- ===================== TOPBAR ===================== -->
+<header class="fixed top-0 right-0 w-[calc(100%-256px)] h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-end items-center px-margin-desktop z-40">
+    <div class="flex items-center gap-6">
+        <button class="text-on-surface-variant hover:text-primary transition-opacity opacity-80 hover:opacity-100">
+            <span class="material-symbols-outlined">notifications</span>
+        </button>
+        <a href="settings.html" class="w-8 h-8 rounded-full overflow-hidden bg-surface-container block">
+            <img alt="Perfil" class="w-full h-full object-cover" src=""/>
+        </a>
+    </div>
+</header>
+
+<!-- ===================== MAIN ===================== -->
+<main class="ml-64 pt-16 min-h-screen px-margin-desktop py-margin-desktop">
+    <div class="max-w-2xl mx-auto">
+
+        <header class="mb-12">
+            <h1 class="font-headline-xl text-headline-xl text-primary mb-2">Gerar meus looks</h1>
+            <p class="font-body-md text-on-surface-variant">Envie sua foto e deixe nossa IA criar combinações perfeitas para você.</p>
+        </header>
+
+        <!-- ---- STEPPER ---- -->
+        <div class="flex items-center justify-between mb-12 relative">
+            <div class="absolute top-[16px] left-0 w-full h-[1px] bg-outline-variant -z-10"></div>
+            <div class="flex flex-col items-center gap-2 bg-surface px-4" id="step-1-indicator">
+                <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-label-md">1</div>
+                <span class="font-label-md text-primary">Enviar foto</span>
+            </div>
+            <div class="flex flex-col items-center gap-2 bg-surface px-4" id="step-2-indicator">
+                <div class="w-8 h-8 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center font-bold text-label-md">2</div>
+                <span class="font-label-md text-on-surface-variant">Gerando looks</span>
+            </div>
+            <div class="flex flex-col items-center gap-2 bg-surface px-4" id="step-3-indicator">
+                <div class="w-8 h-8 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center font-bold text-label-md">3</div>
+                <span class="font-label-md text-on-surface-variant">Looks prontos</span>
+            </div>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- STAGE 1 — FORM                                            -->
+        <!-- ========================================================= -->
+        <div id="stage-form">
+            <form id="look-form" class="space-y-8" onsubmit="handleSubmit(event)">
+
+                <!-- Upload de foto -->
+                <div>
+                    <label class="font-label-md text-on-surface-variant uppercase block mb-2">Sua foto</label>
+                    <div id="upload-area"
+                         class="border-2 border-dashed border-outline-variant rounded-xl p-12 flex flex-col items-center justify-center text-center hover:border-primary transition-colors cursor-pointer group bg-surface-container-lowest"
+                         onclick="document.getElementById('photo-input').click()">
+                        <span id="upload-icon" class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary mb-4">person</span>
+                        <p id="upload-label" class="font-headline-lg text-primary mb-1">Clique para enviar sua foto</p>
+                        <p class="font-body-sm text-on-surface-variant">JPG, PNG, máximo 10MB</p>
+                        <img id="photo-preview" class="hidden mt-6 max-h-64 rounded-lg object-contain" alt="Preview da foto"/>
+                    </div>
+                    <input type="file" id="photo-input" accept="image/jpeg,image/png" class="hidden"/>
+                </div>
+
+                <!-- Estilo & Ocasião -->
+                <div class="grid grid-cols-2 gap-gutter">
+                    <div class="space-y-2">
+                        <label class="font-label-md text-on-surface-variant uppercase" for="estilo">Estilo</label>
+                        <select id="estilo" name="estilo" class="w-full border border-outline-variant rounded-lg p-3 bg-white focus:border-primary transition-colors">
+                            <option value="minimalista">Minimalista</option>
+                            <option value="boho">Boho</option>
+                            <option value="streetwear">Streetwear</option>
+                            <option value="executivo">Executivo</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="font-label-md text-on-surface-variant uppercase" for="ocasiao">Ocasião</label>
+                        <select id="ocasiao" name="ocasiao" class="w-full border border-outline-variant rounded-lg p-3 bg-white focus:border-primary transition-colors">
+                            <option value="trabalho">Trabalho</option>
+                            <option value="evento-noturno">Evento Noturno</option>
+                            <option value="casual">Encontro Casual</option>
+                            <option value="viagem">Viagem</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Estação -->
+                <div class="space-y-4">
+                    <label class="font-label-md text-on-surface-variant uppercase">Estação do ano</label>
+                    <div class="flex gap-3 flex-wrap">
+                        <button type="button" data-group="estacao" data-value="primavera" class="chip-btn chip-active px-6 py-2 rounded font-label-md">Primavera</button>
+                        <button type="button" data-group="estacao" data-value="verao"     class="chip-btn px-6 py-2 rounded font-label-md">Verão</button>
+                        <button type="button" data-group="estacao" data-value="outono"    class="chip-btn px-6 py-2 rounded font-label-md">Outono</button>
+                        <button type="button" data-group="estacao" data-value="inverno"   class="chip-btn px-6 py-2 rounded font-label-md">Inverno</button>
+                    </div>
+                    <input type="hidden" name="estacao" id="estacao-value" value="primavera"/>
+                </div>
+
+                <!-- Orçamento -->
+                <div class="space-y-4">
+                    <label class="font-label-md text-on-surface-variant uppercase">Faixa de orçamento</label>
+                    <div class="flex gap-3 flex-wrap">
+                        <button type="button" data-group="orcamento" data-value="0-200"   class="chip-btn px-6 py-2 rounded font-label-md">R$ 0 – 200</button>
+                        <button type="button" data-group="orcamento" data-value="200-500" class="chip-btn chip-active px-6 py-2 rounded font-label-md">R$ 200 – 500</button>
+                        <button type="button" data-group="orcamento" data-value="500+"    class="chip-btn px-6 py-2 rounded font-label-md">R$ 500+</button>
+                    </div>
+                    <input type="hidden" name="orcamento" id="orcamento-value" value="200-500"/>
+                </div>
+
+                <!-- Cores favoritas -->
+                <div class="space-y-4">
+                    <label class="font-label-md text-on-surface-variant uppercase">Cores favoritas</label>
+                    <div class="flex gap-4 flex-wrap">
+                        <button type="button" data-color="preto"        class="color-btn w-8 h-8 rounded-full bg-black border border-outline-variant" title="Preto"></button>
+                        <button type="button" data-color="branco"       class="color-btn w-8 h-8 rounded-full bg-white border border-outline-variant" title="Branco"></button>
+                        <button type="button" data-color="bege"         class="color-btn w-8 h-8 rounded-full bg-[#D2B48C] border border-outline-variant" title="Bege"></button>
+                        <button type="button" data-color="cinza-azulado" class="color-btn w-8 h-8 rounded-full bg-[#36454F] border border-outline-variant" title="Cinza Azulado"></button>
+                        <button type="button" data-color="marrom"       class="color-btn w-8 h-8 rounded-full bg-[#704214] border border-outline-variant" title="Marrom"></button>
+                    </div>
+                    <input type="hidden" name="cores" id="cores-value" value=""/>
+                </div>
+
+                <!-- Observações -->
+                <div class="space-y-2">
+                    <label class="font-label-md text-on-surface-variant uppercase" for="observacoes">Observações (opcional)</label>
+                    <textarea id="observacoes" name="observacoes"
+                              class="w-full border border-outline-variant rounded-lg p-4 bg-white focus:border-primary transition-colors resize-none"
+                              placeholder="Ex: Prefiro calças de cintura alta e tons terrosos."
+                              rows="4"></textarea>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" id="submit-btn"
+                        class="btn-press w-full py-4 bg-primary text-on-primary font-headline-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity mt-8 rounded-lg">
+                    Gerar meus looks
+                    <span class="material-symbols-outlined">trending_flat</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- STAGE 2 — LOADING                                         -->
+        <!-- ========================================================= -->
+        <div id="stage-loading" class="hidden">
+            <div class="flex flex-col items-center justify-center py-24 gap-10 fade-in">
+
+                <!-- Animated icon -->
+                <div class="relative w-24 h-24 flex items-center justify-center">
+                    <div class="absolute inset-0 rounded-full border-4 border-outline-variant"></div>
+                    <div class="absolute inset-0 rounded-full border-4 border-t-primary spin"></div>
+                    <span class="material-symbols-outlined text-3xl text-primary">auto_awesome</span>
+                </div>
+
+                <div class="text-center space-y-2">
+                    <h2 class="font-headline-lg text-headline-lg text-primary" id="loading-title">Analisando sua foto…</h2>
+                    <p class="font-body-md text-on-surface-variant" id="loading-subtitle">Nossa IA está identificando seu perfil de estilo.</p>
+                </div>
+
+                <!-- Progress steps -->
+                <div class="w-full max-w-sm space-y-3" id="loading-steps">
+                    <div class="loading-step flex items-center gap-3" data-index="0">
+                        <div class="step-dot w-2 h-2 rounded-full bg-outline-variant flex-shrink-0"></div>
+                        <div class="flex-1">
+                            <div class="h-2 rounded-full bg-outline-variant overflow-hidden">
+                                <div class="step-bar h-full bg-primary rounded-full w-0 transition-all duration-700"></div>
+                            </div>
+                        </div>
+                        <span class="font-label-md text-on-surface-variant w-36 text-right step-label">Lendo a foto</span>
+                    </div>
+                    <div class="loading-step flex items-center gap-3" data-index="1">
+                        <div class="step-dot w-2 h-2 rounded-full bg-outline-variant flex-shrink-0"></div>
+                        <div class="flex-1">
+                            <div class="h-2 rounded-full bg-outline-variant overflow-hidden">
+                                <div class="step-bar h-full bg-primary rounded-full w-0 transition-all duration-700"></div>
+                            </div>
+                        </div>
+                        <span class="font-label-md text-on-surface-variant w-36 text-right step-label">Avaliando preferências</span>
+                    </div>
+                    <div class="loading-step flex items-center gap-3" data-index="2">
+                        <div class="step-dot w-2 h-2 rounded-full bg-outline-variant flex-shrink-0"></div>
+                        <div class="flex-1">
+                            <div class="h-2 rounded-full bg-outline-variant overflow-hidden">
+                                <div class="step-bar h-full bg-primary rounded-full w-0 transition-all duration-700"></div>
+                            </div>
+                        </div>
+                        <span class="font-label-md text-on-surface-variant w-36 text-right step-label">Montando os looks</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- STAGE 3 — RESULTS                                         -->
+        <!-- ========================================================= -->
+        <div id="stage-results" class="hidden">
+
+            <div class="flex items-center justify-between mb-8 fade-in">
+                <div>
+                    <h2 class="font-headline-lg text-headline-lg text-primary mb-1">Looks gerados para você</h2>
+                    <p class="font-body-sm text-on-surface-variant" id="results-meta">— combinações prontas</p>
+                </div>
+                <button onclick="resetToForm()"
+                        class="btn-press flex items-center gap-2 border border-outline-variant px-4 py-2 rounded-lg font-label-md text-on-surface-variant hover:bg-surface-container-low transition-colors">
+                    <span class="material-symbols-outlined text-base">refresh</span>
+                    Nova geração
+                </button>
+            </div>
+
+            <!-- Cards container — preenchido via JS / backend -->
+            <div id="results-container" class="space-y-6">
+                <!--
+                    O backend Java deve retornar um JSON do tipo:
+                    {
+                      "looks": [
+                        {
+                          "nome": "Look Casual Chic",
+                          "descricao": "Perfeito para reuniões e cafés.",
+                          "itens": ["Pantalona Creme", "Turtleneck Preto", "Mules em Couro"],
+                          "preco": "R$ 236",
+                          "imagem_url": "https://..."   // opcional
+                        }
+                      ]
+                    }
+
+                    Chame renderResults(data.looks) após receber a resposta.
+                    Ver js/index.js → renderResults()
+                -->
+            </div>
+
+            <!-- Erro de API (mostrado se backend falhar) -->
+            <div id="results-error" class="hidden mt-4 p-4 bg-error-container/20 border border-error/20 rounded-lg text-error font-body-sm"></div>
+
+            <!-- Feedback -->
+            <div class="mt-12 py-8 border-t border-outline-variant text-center fade-in">
+                <p class="font-body-md text-on-surface-variant mb-6">Gostou dos looks?</p>
+                <div class="flex justify-center gap-8">
+                    <button onclick="sendFeedback('positivo')" class="flex flex-col items-center gap-2 group">
+                        <div class="p-4 rounded-full bg-surface-container-low group-hover:bg-primary group-hover:text-on-primary transition-all duration-300">
+                            <span class="material-symbols-outlined">thumb_up</span>
+                        </div>
+                        <span class="font-label-md text-on-surface-variant">Adorei</span>
+                    </button>
+                    <button onclick="sendFeedback('negativo')" class="flex flex-col items-center gap-2 group">
+                        <div class="p-4 rounded-full bg-surface-container-low group-hover:bg-primary group-hover:text-on-primary transition-all duration-300">
+                            <span class="material-symbols-outlined">thumb_down</span>
+                        </div>
+                        <span class="font-label-md text-on-surface-variant">Melhorar</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="w-[calc(100%-256px)] ml-64 bg-surface border-t border-outline-variant flex justify-between items-center py-6 px-margin-desktop">
+    <div class="font-label-md text-secondary">© 2024 NewLook. Em conformidade com a LGPD.</div>
+    <div class="flex gap-8">
+        <a href="#" class="font-label-md text-on-secondary-fixed-variant hover:text-primary transition-colors">Privacidade</a>
+        <a href="#" class="font-label-md text-on-secondary-fixed-variant hover:text-primary transition-colors">Termos de Uso</a>
+        <a href="#" class="font-label-md text-on-secondary-fixed-variant hover:text-primary transition-colors">Cookies</a>
+    </div>
+    <div class="font-label-md text-primary font-bold">NewLook</div>
+</footer>
+
+<script src="../js/nav.js"></script>
+<script src="../js/index.js"></script>
+</body>
+</html>

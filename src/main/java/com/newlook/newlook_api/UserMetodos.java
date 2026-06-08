@@ -15,9 +15,9 @@ public class UserMetodos {
     // Salvando um STRING com o valor da URL do db
     private final String URL = "jdbc:sqlite:dbNewLook.db";
 
-    public void CadastrarUsuario(String nome, String email, String senha) {
+    public void CadastrarUsuario(String nome, String email, String senha, String genero) {
         // Define a Query que vai usar
-        String Query = "INSERT INTO Usuarios (nome, email, senha) VALUES (?, ?, ?);";
+        String Query = "INSERT INTO Usuarios (nome, email, senha, genero) VALUES (?, ?, ?, ?);";
 
         try (Connection conn = DriverManager.getConnection(URL);
                 PreparedStatement pstmt = conn.prepareStatement(Query)) {
@@ -26,6 +26,8 @@ public class UserMetodos {
             pstmt.setString(1, nome);
             pstmt.setString(2, email);
             pstmt.setString(3, senha);
+            pstmt.setString(4, genero);
+
 
             // executa alteração no banco
             pstmt.executeUpdate();
@@ -79,8 +81,8 @@ public class UserMetodos {
         return 0;
     }
 
-    public void editarUsuario(int id, String nome, String email, String senha) {
-        String Query = "UPDATE Usuarios SET nome = ?, email = ?, senha = ? WHERE id = ?;";
+    public void editarUsuario(int id, String nome, String email, String senha, String genero) {
+        String Query = "UPDATE Usuarios SET nome = ?, email = ?, senha = ?, genero = ? WHERE id = ?;";
 
         try (Connection conn = DriverManager.getConnection(URL);
                 PreparedStatement pstmt = conn.prepareStatement(Query)) {
@@ -88,7 +90,8 @@ public class UserMetodos {
             pstmt.setString(1, nome);
             pstmt.setString(2, email);
             pstmt.setString(3, senha);
-            pstmt.setInt(4, id);
+            pstmt.setString(4, genero);
+            pstmt.setInt(5, id);
             pstmt.executeUpdate();
 
             System.out.println("Usuario editado com sucesso: nome - " + nome + " email - " + email + " senha - " + senha);
@@ -98,5 +101,29 @@ public class UserMetodos {
         }
 
     }
+
+    public String[] buscarUsuario(int id) {
+    String Query = "SELECT nome, email, genero FROM Usuarios WHERE id = ?;";
+
+    try (Connection conn = DriverManager.getConnection(URL);
+            PreparedStatement pstmt = conn.prepareStatement(Query)) {
+
+        pstmt.setInt(1, id);
+
+        try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                return new String[]{
+                    rs.getString("nome"),
+                    rs.getString("email"),
+                    rs.getString("genero")
+                };
+            }
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Erro ao buscar usuario, erro: " + e.getMessage());
+    }
+    return null;
+}
 
 }

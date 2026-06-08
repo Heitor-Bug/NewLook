@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Meus Looks | NewLook</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="../js/tailwind.config.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="../css/styles.css"/>
+
+    <style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.4s ease forwards; }
+        .look-card { animation: fadeIn 0.4s ease forwards; opacity: 0; }
+        .look-card:nth-child(1) { animation-delay: 0.05s; }
+        .look-card:nth-child(2) { animation-delay: 0.12s; }
+        .look-card:nth-child(3) { animation-delay: 0.19s; }
+        .look-card:nth-child(4) { animation-delay: 0.26s; }
+        .look-card:nth-child(5) { animation-delay: 0.33s; }
+        .look-card:nth-child(6) { animation-delay: 0.40s; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-x-hidden">
+
+<!-- ===================== SIDEBAR ===================== -->
+<aside class="w-64 h-full fixed left-0 top-0 bg-surface border-r border-outline-variant flex flex-col py-margin-desktop px-4 gap-8 z-50">
+    <div class="font-display-lg text-headline-lg tracking-tight text-primary px-4">NewLook</div>
+    <nav class="flex flex-col gap-1">
+        <a data-nav="generate" href="index.html"
+           class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low transition-colors duration-200 rounded-lg">
+            <span class="material-symbols-outlined">auto_awesome</span>
+            <span class="font-body-md">Gerar Looks</span>
+        </a>
+        <a data-nav="looks" href="looks.html"
+           class="flex items-center gap-4 px-4 py-3 rounded-lg">
+            <span class="material-symbols-outlined">style</span>
+            <span class="font-body-md">Meus Looks</span>
+        </a>
+        <a data-nav="settings" href="settings.html"
+           class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low transition-colors duration-200 rounded-lg">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="font-body-md">Configurações</span>
+        </a>
+    </nav>
+</aside>
+
+<!-- ===================== TOPBAR ===================== -->
+<header class="fixed top-0 right-0 w-[calc(100%-256px)] h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-end items-center px-margin-desktop z-40">
+    <div class="flex items-center gap-6">
+        <a id="topbar-avatar-link" href="settings.html" class="hidden w-8 h-8 rounded-full overflow-hidden bg-surface-container block">
+            <img id="topbar-avatar" alt="Perfil" class="w-full h-full object-cover" src=""/>
+        </a>
+        <a id="topbar-login-btn" href="login.html"
+           class="hidden font-label-md uppercase tracking-wider border border-outline-variant px-4 py-2 rounded-lg text-on-surface hover:bg-surface-container-low transition-colors">
+            Entrar
+        </a>
+        <button id="topbar-logout-btn"
+                class="hidden font-label-md uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors"
+                onclick="handleLogout()">
+            Sair
+        </button>
+    </div>
+</header>
+
+<!-- ===================== MAIN ===================== -->
+<main class="ml-64 pt-16 min-h-screen px-margin-desktop py-margin-desktop">
+    <div class="max-w-5xl mx-auto">
+
+        <header class="mb-12 flex items-end justify-between">
+            <div>
+                <h1 class="font-headline-xl text-headline-xl text-primary mb-2">Meus Looks</h1>
+                <p class="font-body-md text-on-surface-variant">Todos os looks gerados pela IA para você.</p>
+            </div>
+            <a href="index.html"
+               class="flex items-center gap-2 bg-primary text-on-primary px-5 py-3 rounded-lg font-label-md hover:opacity-90 transition-opacity">
+                <span class="material-symbols-outlined text-base">add</span>
+                Gerar novo look
+            </a>
+        </header>
+
+        <!-- Loading -->
+        <div id="looks-loading" class="flex flex-col items-center justify-center py-24 gap-4">
+            <div class="relative w-16 h-16 flex items-center justify-center">
+                <div class="absolute inset-0 rounded-full border-4 border-outline-variant"></div>
+                <div class="absolute inset-0 rounded-full border-4 border-t-primary" style="animation: spin 1s linear infinite;"></div>
+                <span class="material-symbols-outlined text-xl text-primary">style</span>
+            </div>
+            <p class="font-body-md text-on-surface-variant">Carregando seus looks...</p>
+        </div>
+
+        <!-- Empty state -->
+        <div id="looks-empty" class="hidden flex flex-col items-center justify-center py-24 gap-6 text-center fade-in">
+            <span class="material-symbols-outlined text-6xl text-on-surface-variant">style</span>
+            <div>
+                <h2 class="font-headline-lg text-headline-lg mb-2">Nenhum look ainda</h2>
+                <p class="font-body-md text-on-surface-variant max-w-sm">Você ainda não gerou nenhum look. Que tal começar agora?</p>
+            </div>
+            <a href="index.html"
+               class="bg-primary text-on-primary px-8 py-3 rounded-lg font-label-md hover:opacity-90 transition-opacity">
+                Gerar meu primeiro look
+            </a>
+        </div>
+
+        <!-- Grid de looks -->
+        <div id="looks-grid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+        <!-- Modal de detalhes -->
+        <div id="look-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-6" onclick="fecharModal(event)">
+            <div class="bg-surface rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+
+                <div class="flex items-center justify-between p-6 border-b border-outline-variant">
+                    <h2 id="modal-nome" class="font-headline-lg text-headline-lg text-primary"></h2>
+                    <button onclick="fecharModal()" class="text-on-surface-variant hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+
+                <div class="p-6 space-y-6">
+
+                    <!-- Informações do look -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-surface-container-lowest rounded-lg p-4">
+                            <p class="font-label-md text-on-surface-variant uppercase mb-1">Estilo</p>
+                            <p id="modal-estilo" class="font-body-md text-on-surface"></p>
+                        </div>
+                        <div class="bg-surface-container-lowest rounded-lg p-4">
+                            <p class="font-label-md text-on-surface-variant uppercase mb-1">Ocasião</p>
+                            <p id="modal-ocasiao" class="font-body-md text-on-surface"></p>
+                        </div>
+                        <div class="bg-surface-container-lowest rounded-lg p-4">
+                            <p class="font-label-md text-on-surface-variant uppercase mb-1">Estação</p>
+                            <p id="modal-estacao" class="font-body-md text-on-surface"></p>
+                        </div>
+                        <div class="bg-surface-container-lowest rounded-lg p-4">
+                            <p class="font-label-md text-on-surface-variant uppercase mb-1">Orçamento</p>
+                            <p id="modal-preco" class="font-body-md text-on-surface"></p>
+                        </div>
+                    </div>
+
+                    <!-- Peças -->
+                    <div>
+                        <div class="flex items-center gap-2 text-primary mb-4">
+                            <span class="material-symbols-outlined text-[18px]">checkroom</span>
+                            <span class="font-label-md uppercase tracking-wider">Peças do look</span>
+                        </div>
+                        <div id="modal-roupas" class="space-y-3"></div>
+                    </div>
+
+                    <!-- Total -->
+                    <div class="border-t border-outline-variant pt-4 flex justify-between items-center">
+                        <span class="font-label-md text-on-surface-variant uppercase">Total estimado</span>
+                        <span id="modal-total" class="font-headline-lg text-primary"></span>
+                    </div>
+
+                    <!-- Ações -->
+                    <div class="flex gap-3 pt-2">
+                        <button onclick="confirmarExcluirLook()"
+                                class="flex items-center gap-2 border border-error/30 text-error px-4 py-2 rounded-lg font-label-md hover:bg-error-container/20 transition-colors">
+                            <span class="material-symbols-outlined text-base">delete</span>
+                            Excluir look
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="w-[calc(100%-256px)] ml-64 bg-surface border-t border-outline-variant flex justify-between items-center py-6 px-margin-desktop">
+    <div class="font-label-md text-secondary">© 2026 NewLook. Em conformidade com a LGPD.</div>
+    <div class="flex gap-8">
+        <a href="#" class="font-label-md text-on-secondary-fixed-variant hover:text-primary transition-colors">Privacidade</a>
+        <a href="#" class="font-label-md text-on-secondary-fixed-variant hover:text-primary transition-colors">Termos de Uso</a>
+        <a href="#" class="font-label-md text-on-secondary-fixed-variant hover:text-primary transition-colors">Cookies</a>
+    </div>
+    <div class="font-label-md text-primary font-bold">NewLook</div>
+</footer>
+
+<style>
+    @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+<script src="../js/nav.js"></script>
+<script src="../js/looks.js"></script>
+<script>
+    function updateAuthUI(isLoggedIn) {
+        document.getElementById('topbar-avatar-link').classList.toggle('hidden', !isLoggedIn);
+        document.getElementById('topbar-logout-btn').classList.toggle('hidden', !isLoggedIn);
+        document.getElementById('topbar-login-btn').classList.toggle('hidden', isLoggedIn);
+    }
+
+    function handleLogout() {
+        localStorage.removeItem('newlook_userId');
+        localStorage.removeItem('newlook_nome');
+        localStorage.removeItem('newlook_email');
+        localStorage.removeItem('newlook_genero');
+        localStorage.removeItem('newlook_avatar');
+        window.location.href = 'login.html';
+    }
+
+    const isLoggedIn = !!localStorage.getItem('newlook_userId');
+    updateAuthUI(isLoggedIn);
+
+    const avatar = localStorage.getItem('newlook_avatar');
+    if (avatar) document.getElementById('topbar-avatar').src = avatar;
+</script>
+</body>
+</html>

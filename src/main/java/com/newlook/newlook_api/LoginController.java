@@ -19,9 +19,10 @@ public class LoginController {
     public String cadastrarUser(
             @RequestParam("nome") String nome,
             @RequestParam("email") String email,
-            @RequestParam("senha") String senha) {
+            @RequestParam("senha") String senha,
+            @RequestParam("genero") String genero) {
         UserMetodos user = new UserMetodos();
-        user.CadastrarUsuario(nome, email, senha);
+        user.CadastrarUsuario(nome, email, senha, genero);
 
         return "Usuario cadastrado com sucesso!";
     }
@@ -59,19 +60,32 @@ public class LoginController {
 
     @PostMapping("/post/user/edit")
     public String editUser(
-        @RequestParam("id") int id,
-        @RequestParam("nome") String nome,
-        @RequestParam("email") String email,
-        @RequestParam("senha") String senha
-    ) {
+            @RequestParam("id") int id,
+            @RequestParam("nome") String nome,
+            @RequestParam("email") String email,
+            @RequestParam("senha") String senha,
+            @RequestParam("genero") String genero) {
         UserMetodos user = new UserMetodos();
 
         try {
-            user.editarUsuario(id, nome, email, senha);
+            user.editarUsuario(id, nome, email, senha, genero);
             return "Usuario editado com sucesso: nome - " + nome + " email - " + email + " senha - " + senha;
         } catch (Exception e) {
             return "Usuario nao foi editado, erro: " + e.getMessage();
         }
+    }
+
+    @GetMapping("/get/user")
+    public String getUser(@RequestParam("id") int id) {
+        UserMetodos user = new UserMetodos();
+        String[] dados = user.buscarUsuario(id);
+
+        if (dados == null)
+            return "{\"erro\": \"Usuario nao encontrado\"}";
+
+        return String.format(
+                "{\"nome\": \"%s\", \"email\": \"%s\", \"genero\": \"%s\"}",
+                dados[0], dados[1], dados[2]);
     }
 
 }

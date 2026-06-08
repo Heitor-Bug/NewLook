@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | NewLook</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="../js/tailwind.config.js"></script>
+
+    <link rel="stylesheet" href="../css/styles.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+</head>
+
+<body class="bg-surface text-on-surface overflow-hidden">
+
+<main class="flex h-screen w-full">
+
+    <!-- Painel esquerdo -->
+    <section class="login-hero hidden lg:flex lg:w-1/2 relative overflow-hidden">
+
+        <img
+            src="../img/capainicio.jpg"
+            alt="Moda"
+            class="absolute inset-0 w-full h-full object-cover">
+
+        <div class="hero-overlay"></div>
+
+        <div class="relative z-10 flex flex-col justify-end p-margin-desktop h-full w-full">
+
+            <div class="mb-12">
+
+                <h1 class="font-display-lg text-white mb-6 leading-tight">
+                    Seu estilo,<br>
+                    nossas ideias.
+                </h1>
+
+                <div class="flex flex-col gap-6">
+
+                    <div class="flex items-center gap-4 text-white">
+                        <div class="benefit-icon">
+                            <span class="material-symbols-outlined">schedule</span>
+                        </div>
+                        <span class="font-body-lg">Economize tempo</span>
+                    </div>
+
+                    <div class="flex items-center gap-4 text-white">
+                        <div class="benefit-icon">
+                            <span class="material-symbols-outlined">auto_awesome</span>
+                        </div>
+                        <span class="font-body-lg">Sugestões personalizadas</span>
+                    </div>
+
+                    <div class="flex items-center gap-4 text-white">
+                        <div class="benefit-icon">
+                            <span class="material-symbols-outlined">verified</span>
+                        </div>
+                        <span class="font-body-lg">Aumente sua confiança</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="text-white/60 font-label-md">
+                NEWLOOK © 2026
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Lado direito -->
+    <section
+        class="w-full lg:w-1/2 h-full overflow-y-auto bg-surface flex items-center justify-center py-12 px-6 sm:px-12">
+
+        <div class="w-full max-w-md flex flex-col gap-8">
+
+            <!-- Logo -->
+            <div>
+                <h1 class="font-display-lg text-display-lg text-primary tracking-tight">
+                    NewLook
+                </h1>
+            </div>
+
+            <!-- Cabeçalho -->
+            <div class="flex flex-col gap-1">
+
+                <h2 class="font-headline-xl text-headline-xl text-on-surface">
+                    Login
+                </h2>
+
+                <p class="font-body-md text-on-surface-variant">
+                    Bem-vindo de volta! Faça login para continuar.
+                </p>
+
+            </div>
+
+            <!-- Formulário -->
+            <form id="login-form" class="flex flex-col gap-6">
+
+                <div class="flex flex-col gap-4">
+
+                    <!-- E-mail -->
+                    <div class="flex flex-col gap-1.5">
+
+                        <label
+                            for="email"
+                            class="font-label-md text-secondary uppercase">
+                            E-mail
+                        </label>
+
+                        <input
+                            id="email"
+                            type="email"
+                            placeholder="nome@exemplo.com"
+                            class="auth-input rounded-lg px-4 py-3 font-body-md text-on-surface bg-white">
+
+                    </div>
+
+                    <!-- Senha -->
+                    <div class="flex flex-col gap-1.5">
+
+                        <div class="flex justify-between items-center">
+
+                            <label
+                                for="password"
+                                class="font-label-md text-secondary uppercase">
+                                Senha
+                            </label>
+
+                            <a href="#" class="font-label-md text-on-surface-variant hover:text-primary transition-colors">
+                                Esqueceu a senha?
+                            </a>
+
+                        </div>
+
+                        <div class="relative">
+
+                            <input
+                                id="password"
+                                type="password"
+                                placeholder="••••••••"
+                                class="auth-input rounded-lg px-4 py-3 font-body-md text-on-surface bg-white w-full">
+
+                            <button
+                                type="button"
+                                id="toggle-password"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors">
+                                <span class="material-symbols-outlined text-[20px]">visibility</span>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Botão -->
+                <button
+                    id="login-btn"
+                    type="submit"
+                    class="auth-btn bg-primary text-on-primary py-4 rounded-lg font-headline-lg transition-all duration-300 hover:opacity-90">
+                    Entrar
+                </button>
+
+            </form>
+
+            <!-- Divisor 
+            <div class="flex items-center gap-4">
+
+                <div class="flex-1 h-px bg-outline-variant"></div>
+
+                <span class="font-label-md text-secondary uppercase whitespace-nowrap">
+                    Ou entre com
+                </span>
+
+                <div class="flex-1 h-px bg-outline-variant"></div>
+
+            </div>
+            -->
+
+            <!-- Login Social
+            <div class="grid grid-cols-3 gap-3">
+
+                <button
+                    class="flex items-center justify-center py-3 px-4 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors btn-interaction font-body-md">
+                    Google
+                </button>
+
+                <button
+                    class="flex items-center justify-center py-3 px-4 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors btn-interaction font-body-md">
+                    Apple
+                </button>
+
+                <button
+                    class="flex items-center justify-center py-3 px-4 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors btn-interaction font-body-md">
+                    Facebook
+                </button>
+
+            </div> -->
+
+            <!-- Rodapé -->
+            <div class="text-center">
+
+                <p class="font-body-md text-on-surface-variant">
+
+                    Ainda não tem uma conta?
+
+                    <a href="register.html" class="text-primary font-bold hover:underline">
+                        Cadastre-se
+                    </a>
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script src="../js/login.js"></script>
+
+</body>
+</html>

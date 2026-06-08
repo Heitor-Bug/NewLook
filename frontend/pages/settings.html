@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Configurações | NewLook</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="../js/tailwind.config.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="../css/styles.css"/>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex">
+
+<!-- ===================== SIDEBAR ===================== -->
+<aside class="w-64 h-full fixed left-0 top-0 bg-surface border-r border-outline-variant flex flex-col py-margin-desktop px-4 gap-8 z-50">
+    <div class="font-display-lg text-headline-lg tracking-tight text-primary px-4">NewLook</div>
+    <nav class="flex flex-col gap-1">
+
+        <a data-nav="generate" href="index.html" class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low transition-colors duration-200">
+            <span class="material-symbols-outlined">auto_awesome</span>
+            <span class="font-body-md">Gerar Looks</span>
+        </a>
+        <a data-nav="looks" href="looks.html"
+        class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low transition-colors duration-200 rounded-lg">
+            <span class="material-symbols-outlined">style</span>
+            <span class="font-body-md">Meus Looks</span>
+        </a>
+        <a data-nav="settings" href="settings.html" class="flex items-center gap-4 px-4 py-3 rounded-lg">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="font-body-md">Configurações</span>
+        </a>
+
+    </nav>
+</aside>
+
+<!-- ===================== MAIN ===================== -->
+<main class="flex-1 ml-64 flex flex-col min-h-screen">
+
+    <!-- TopAppBar -->
+    <header class="fixed top-0 right-0 w-[calc(100%-256px)] z-40 bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-end items-center h-16 px-margin-desktop">
+        <div class="flex items-center gap-6">
+
+            <!-- Avatar (só aparece se logado) -->
+            <div id="topbar-avatar-wrapper" class="hidden w-8 h-8 rounded-full overflow-hidden bg-surface-container">
+                <img id="topbar-avatar" alt="Perfil" class="w-full h-full object-cover" src=""/>
+            </div>
+
+            <!-- Botão Entrar (só aparece se deslogado) -->
+            <a id="topbar-login-btn" href="login.html"
+               class="hidden font-label-md uppercase tracking-wider border border-outline-variant px-4 py-2 rounded-lg text-on-surface hover:bg-surface-container-low transition-colors">
+                Entrar
+            </a>
+
+            <!-- Botão Sair (só aparece se logado) -->
+            <button id="topbar-logout-btn"
+                    class="hidden font-label-md uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors"
+                    onclick="handleLogout()">
+                Sair
+            </button>
+
+        </div>
+    </header>
+
+    <!-- Content -->
+    <div class="pt-24 pb-12 px-margin-desktop max-w-4xl mx-auto w-full flex-1">
+
+        <header class="mb-12">
+            <h2 class="font-headline-xl text-headline-xl text-primary mb-2">Configurações de Perfil</h2>
+            <p class="text-on-surface-variant font-body-md">Gerencie suas informações pessoais.</p>
+        </header>
+
+        <!-- Avatar -->
+        <section class="mb-16 flex items-center gap-10">
+            <div class="relative group">
+                <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-surface shadow-sm bg-surface-container">
+                    <img id="avatar-preview" alt="Avatar" class="w-full h-full object-cover" src=""/>
+                </div>
+                <label for="avatar-upload"
+                       class="absolute bottom-0 right-0 bg-primary text-on-primary w-10 h-10 rounded-full flex items-center justify-center cursor-pointer hover:scale-105 transition-transform">
+                    <span class="material-symbols-outlined text-[20px]">photo_camera</span>
+                    <input type="file" accept="image/*" id="avatar-upload" class="hidden"/>
+                </label>
+            </div>
+            <div>
+                <h3 class="font-headline-lg text-headline-lg mb-1">Seu Avatar</h3>
+                <p class="text-on-surface-variant font-body-sm max-w-xs">JPG ou PNG. Máximo 5MB. Recomendamos 400×400px.</p>
+            </div>
+        </section>
+
+        <!-- Form -->
+        <form id="settings-form" class="space-y-12">
+
+            <!-- Informações básicas -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+
+                <div class="flex flex-col gap-2">
+                    <label class="font-label-md text-on-surface-variant uppercase tracking-wider" for="nome">Nome Completo</label>
+                    <input type="text" id="nome" name="nome"
+                           class="bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-surface transition-all"
+                           value="Marina Silva"/>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label class="font-label-md text-on-surface-variant uppercase tracking-wider" for="email">E-mail</label>
+                    <input type="email" id="email" name="email"
+                           class="bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-surface transition-all"
+                           value="marina.silva@exemplo.com"/>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label class="font-label-md text-on-surface-variant uppercase tracking-wider" for="telefone">Telefone</label>
+                    <input type="tel" id="telefone" name="telefone"
+                           class="bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-surface transition-all"
+                           value="+55 (11) 98765-4321"/>
+                </div>
+
+                <!-- Gênero -->
+                <div class="flex flex-col gap-2">
+                    <label class="font-label-md text-on-surface-variant uppercase tracking-wider" for="genero">Gênero</label>
+                    <select id="genero" name="genero"
+                            class="bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-surface transition-all focus:border-primary">
+                        <option value="">Prefiro não informar</option>
+                        <option value="feminino">Feminino</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="nao-binario">Não-binário</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col gap-2 md:col-span-2">
+                    <label class="font-label-md text-on-surface-variant uppercase tracking-wider" for="bio">Bio</label>
+                    <textarea id="bio" name="bio"
+                              class="bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-surface transition-all resize-none"
+                              rows="3">Apaixonada por moda sustentável e tecnologia.</textarea>
+                </div>
+
+            </div>
+
+            <!-- Segurança -->
+            <div class="pt-8 border-t border-outline-variant">
+                <h3 class="font-headline-lg text-headline-lg mb-6">Segurança</h3>
+                <div class="flex flex-col md:flex-row items-end gap-4">
+                    <div class="flex flex-col gap-2 flex-1">
+                        <label class="font-label-md text-on-surface-variant uppercase tracking-wider" for="nova-senha">Nova Senha</label>
+                        <input type="password" id="nova-senha" name="nova_senha"
+                               class="bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-surface w-full"
+                               placeholder="••••••••"/>
+                    </div>
+                    <button type="button" id="reset-senha-btn"
+                            class="border border-outline-variant px-6 py-3 font-label-md text-on-surface hover:bg-surface-container-low transition-all h-[48px] rounded-lg">
+                        Redefinir Senha
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ações -->
+            <div class="flex items-center gap-4 pt-4">
+                <button type="submit" id="save-btn"
+                        class="btn-press bg-primary text-on-primary px-10 py-4 font-label-md uppercase tracking-widest hover:opacity-90 transition-all rounded-lg">
+                    Salvar Alterações
+                </button>
+                <button type="button" onclick="window.location.href='index.html'"
+                        class="text-on-surface-variant px-10 py-4 font-label-md uppercase tracking-widest hover:text-primary transition-all">
+                    Cancelar
+                </button>
+            </div>
+
+            <!-- Zona crítica -->
+            <div class="pt-16 border-t border-outline-variant">
+                <div class="bg-error-container/20 p-8 rounded-lg border border-error/10">
+                    <h4 class="text-error font-headline-lg mb-2">Zona Crítica</h4>
+                    <p class="text-on-surface-variant font-body-md mb-6">
+                        Ao deletar sua conta, todos os seus dados, favoritos e histórico de looks gerados pela IA
+                        serão permanentemente removidos.
+                    </p>
+                    <button type="button" id="delete-account-btn"
+                            class="text-error font-label-md underline hover:opacity-70 transition-opacity uppercase tracking-wider">
+                        Excluir minha conta permanentemente
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-outline-variant flex justify-between items-center py-6 px-margin-desktop bg-surface">
+        <span class="font-label-md text-on-secondary-fixed-variant">© 2026 NewLook. Em conformidade com a LGPD.</span>
+        <div class="flex gap-8">
+            <a href="#" class="font-label-md text-on-secondary-fixed-variant hover:text-primary transition-all">Privacidade</a>
+            <a href="#" class="font-label-md text-on-secondary-fixed-variant hover:text-primary transition-all">Termos de Uso</a>
+            <a href="#" class="font-label-md text-on-secondary-fixed-variant hover:text-primary transition-all">Cookies</a>
+        </div>
+    </footer>
+
+</main>
+
+<script src="../js/nav.js"></script>
+<script src="../js/settings.js"></script>
+<script>
+    // Auth UI — troca entre estado logado e deslogado
+    function updateAuthUI(isLoggedIn) {
+        document.getElementById('topbar-avatar-wrapper').classList.toggle('hidden', !isLoggedIn);
+        document.getElementById('topbar-logout-btn').classList.toggle('hidden', !isLoggedIn);
+        document.getElementById('topbar-login-btn').classList.toggle('hidden', isLoggedIn);
+    }
+
+    function handleLogout() {
+        localStorage.removeItem('newlook_token');
+        sessionStorage.removeItem('newlook_token');
+        window.location.href = 'login.html';
+    }
+
+    const isLoggedIn = !!localStorage.getItem('newlook_userId');
+    updateAuthUI(isLoggedIn);
+</script>
+</body>
+</html>
