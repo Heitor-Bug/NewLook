@@ -1,39 +1,63 @@
-/* ============================================
-   NewLook - Design System Tokens & Shared Styles
-   ============================================ */
+/*
+    style.css — Estilos globais do NewLook.
+    Classes que complementam o Tailwind (scrollbar, chips, botões, etc.).
+*/
 
-/* --- Material Symbols --- */
+/*
+    Material Symbols: configuração da fonte de ícones.
+    font-variation-settings: controla variações da fonte variável
+      - FILL: 0 (sem preenchimento) ou 1 (preenchido)
+      - wght: peso (100-700)
+      - GRAD: grade (menor = mais compacto)
+      - opsz: tamanho óptico (24 = tamanho padrão)
+    vertical-align: middle: alinha o ícone verticalmente com o texto.
+*/
 .material-symbols-outlined {
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     vertical-align: middle;
 }
 
-/* --- Scrollbar --- */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #e2e2e2; }
+/* Scrollbar personalizada (somente Webkit: Chrome, Edge, Opera) */
+::-webkit-scrollbar { width: 4px; }                      /* Largura da barra */
+::-webkit-scrollbar-track { background: transparent; }   /* Fundo da barra (invisível) */
+::-webkit-scrollbar-thumb { background: #e2e2e2; }       /* "Polegar" (parte que arrasta) */
 
-.hide-scrollbar::-webkit-scrollbar { display: none; }
-.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+/* .hide-scrollbar: esconde a scrollbar mas mantém o scroll funcional */
+.hide-scrollbar::-webkit-scrollbar { display: none; } /* Webkit */
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; } /* IE/Edge e Firefox */
 
-/* --- Ambient shadow on hover --- */
+/* .ambient-shadow: sombra suave ao passar o mouse (hover) */
 .ambient-shadow:hover {
     box-shadow: 0 0 40px rgba(0,0,0,0.05);
 }
 
-/* --- Input focus states --- */
+/* Estado de foco de inputs: remove outline padrão e define borda preta */
+/*
+    :focus: pseudo-classe ativada quando o elemento recebe foco (tab ou clique).
+    outline: none: remove o contorno azul padrão do navegador.
+    !important: sobrescreve qualquer outra regra CSS (necessário para Tailwind).
+    box-shadow: none: remove sombra de foco (padrão do Chrome).
+*/
 input:focus, textarea:focus, select:focus {
     outline: none;
     border-color: #1b1c1c !important;
     box-shadow: none;
 }
 
-/* --- Button press animation --- */
+/* .btn-press: animação de clique (escala 98% = "afunda" levemente) */
+/*
+    :active: pseudo-clase ativada ENQUANTO o botão está pressionado.
+    transform: scale(0.98): reduz o tamanho para 98%.
+*/
 .btn-press:active {
     transform: scale(0.98);
 }
 
-/* --- Nav active state --- */
+/* .nav-active: destaca o link da página atual na sidebar */
+/*
+    background-color: #e9e8e7 (cinza claro)
+    font-weight: 600 (semi-negrito)
+*/
 .nav-active {
     background-color: #e9e8e7;
     color: #1b1c1c;
@@ -41,44 +65,33 @@ input:focus, textarea:focus, select:focus {
     font-weight: 600;
 }
 
-/* ============================================
-   Auth Pages (Login + Cadastro)
-   ============================================ */
-
-.login-hero {
-    background-color: #dbdad9;
+/* .chip-btn: botões de toggle (estação, orçamento, cores) */
+/*
+    cursor: pointer: mãozinha ao passar o mouse.
+    transition: all 0.2s: animação suave de 0.2 segundos em todas as propriedades.
+*/
+.chip-btn {
+    border: 1px solid #c4c7c7;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.chip-btn:hover {
+    border-color: #1b1c1c; /* Escurece a borda no hover */
+}
+/*
+    .chip-active: estado ativo do chip.
+    !important: garante que o fundo preto e texto branco prevaleçam.
+*/
+.chip-active {
+    background: #1b1c1c !important;
+    color: white !important;
+    border-color: #1b1c1c !important;
 }
 
-.hero-overlay {
-    position: absolute;
-    inset: 0;
-
-    background:
-        linear-gradient(
-            to bottom,
-            rgba(0,0,0,0),
-            rgba(0,0,0,.6)
-        );
-}
-
-.benefit-icon {
-    width: 40px;
-    height: 40px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 9999px;
-
-    background: rgba(255,255,255,.1);
-
-    backdrop-filter: blur(8px);
-}
-
+/* .auth-input: inputs das páginas de autenticação (login/register) */
 .auth-input {
     border: 1px solid #e5e5e5;
-    transition: border-color .2s ease;
 }
 
 .auth-input:focus {
@@ -87,6 +100,7 @@ input:focus, textarea:focus, select:focus {
     box-shadow: none;
 }
 
+/* .auth-btn: botão de submit nas páginas de autenticação */
 .auth-btn:active {
-    transform: scale(.98);
+    transform: scale(.98); /* Efeito de "afundar" ao clicar */
 }

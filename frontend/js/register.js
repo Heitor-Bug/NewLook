@@ -1,137 +1,96 @@
-/* ============================================
-   NewLook - Cadastro
-   ============================================ */
-
 const API_BASE = 'http://localhost:8080';
 
+/*
+    DOMContentLoaded: executa após o HTML ser completamente carregado.
+    Arrow function () => {}: sintaxe moderna de função anônima.
+*/
 document.addEventListener('DOMContentLoaded', () => {
-    initRegisterForm();
-    redirectIfLoggedIn();
-});
-
-// ─── Se já estiver logado, redireciona direto ─────────────────────
-function redirectIfLoggedIn() {
+    // Redireciona se já estiver logado
     if (localStorage.getItem('newlook_userId')) {
         window.location.href = 'index.html';
+        return;
     }
-}
-
-// ─── Form ─────────────────────────────────────────────────────────
-function initRegisterForm() {
-    const form = document.getElementById('register-form');
-    if (!form) return;
-    form.addEventListener('submit', handleRegister);
-}
+    // Vincula a função handleRegister ao evento submit do formulário
+    document.getElementById('register-form').addEventListener('submit', handleRegister);
+});
 
 async function handleRegister(event) {
     event.preventDefault();
+    clearError(); // Remove mensagem de erro anterior
 
-    const nome     = document.getElementById('name');
-    const email    = document.getElementById('email');
-    const senha    = document.getElementById('password');
-    const confirmar = document.getElementById('confirm_password');
-    const genero   = document.getElementById('genero');
-    const termos   = document.getElementById('terms');
+    /*
+        value: propriedade que contém o texto digitado no input.
+        trim(): remove espaços em branco no início e fim.
+    */
+    const nome = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const senha = document.getElementById('password').value;
+    const confirmar = document.getElementById('confirm_password').value;
+    const genero = document.getElementById('genero').value;
 
-    clearValidation();
+    // Validações com early return (sai da função se algo estiver errado)
+    if (!nome || !email || !senha || !confirmar) { showError('Preencha todos os campos.'); return; }
+    if (senha.length < 6) { showError('A senha deve ter pelo menos 6 caracteres.'); return; }
+    if (senha !== confirmar) { showError('As senhas não coincidem.'); return; }
 
-    // ─── Validações ───────────────────────────────────────────────
-    let valid = true;
-
-    [nome, email, senha, confirmar].forEach(input => {
-        if (!input.value.trim()) {
-            setFieldError(input, true);
-            valid = false;
-        }
-    });
-
-    if (!valid) {
-        showError('Preencha todos os campos obrigatórios.');
-        return;
-    }
-
-    if (senha.value.length < 6) {
-        setFieldError(senha, true);
-        showError('A senha deve ter pelo menos 6 caracteres.');
-        return;
-    }
-
-    if (senha.value !== confirmar.value) {
-        setFieldError(senha, true);
-        setFieldError(confirmar, true);
-        showError('As senhas não coincidem.');
-        return;
-    }
-
-    if (!termos.checked) {
-        showError('Você precisa aceitar os Termos de Uso.');
-        return;
-    }
-
-    // ─── Envio ────────────────────────────────────────────────────
     const button = document.getElementById('register-btn');
-    setButtonLoading(button, true);
+    button.disabled = true;
+    button.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Criando conta...';
 
     try {
         const formData = new FormData();
-        formData.append('nome', nome.value.trim());
-        formData.append('email', email.value.trim());
-        formData.append('senha', senha.value);
-        formData.append('genero', genero.value || 'Não informado');
+        formData.append('nome', nome);
+        formData.append('email', email);
+        formData.append('senha', senha);
+        formData.append('genero', genero || 'Não informado');
 
-        const response = await fetch(`${API_BASE}/post/user/cadastro`, {
-            method: 'POST',
-            body: formData
-        });
+        const response = await fetch(`${API_BASE}/post/user/cadastro`, { method: 'POST', body: formData });
+        if (!response.ok) throw new Error();
 
-        if (!response.ok) {
-            throw new Error(`Erro ${response.status}`);
-        }
+        // Sucesso: mostra mensagem e redireciona para o login
+        const btn = document.getElementById('register-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Cadastro concluído!';
+        btn.classList.add('bg-green-600');
 
-        // Feedback visual de sucesso
-        button.disabled = true;
-        button.innerHTML = `
-            <span class="material-symbols-outlined">check</span>
-            Conta criada!`;
-
-        setTimeout(() => {
-            window.location.href = 'login.html';
-        }, 800);
-
-    } catch (error) {
+        showSuccess('Conta criada com sucesso! Redirecionando...');
+        setTimeout(() => { window.location.href = 'login.html'; }, 2000);
+    } catch (_) {
         showError('Erro ao criar conta. Tente novamente.');
-        setButtonLoading(button, false);
+        button.disabled = false;
+        button.textContent = 'Criar conta';
     }
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────
-function setFieldError(input, hasError) {
-    input.style.borderColor = hasError ? '#ba1a1a' : '';
-}
-
-function clearValidation() {
-    document.querySelectorAll('input, select').forEach(input => {
-        input.style.borderColor = '';
-    });
-
-    const errorEl = document.getElementById('register-error');
-    if (errorEl) errorEl.textContent = '';
-}
-
-function setButtonLoading(button, loading) {
-    button.disabled = loading;
-    button.innerHTML = loading
-        ? `<span class="material-symbols-outlined animate-spin">progress_activity</span> Criando conta...`
-        : 'Criar conta';
-}
-
+/*
+    showError e clearError: gerenciam a exibição de mensagens de erro.
+    Diferente do login.js, aqui há uma função separada para limpar a mensagem
+    (clearError é chamada no início do submit).
+*/
 function showError(msg) {
-    let errorEl = document.getElementById('register-error');
-    if (!errorEl) {
-        errorEl = document.createElement('p');
-        errorEl.id = 'register-error';
-        errorEl.className = 'text-error font-body-sm text-center mt-2';
-        document.getElementById('register-form').appendChild(errorEl);
+    let el = document.getElementById('register-error');
+    if (!el) {
+        el = document.createElement('p');
+        el.id = 'register-error';
+        el.className = 'text-error font-body-sm text-center mt-2';
+        document.getElementById('register-form').appendChild(el); // appendChild: adiciona ao final
     }
-    errorEl.textContent = msg;
+    el.textContent = msg;
+}
+
+function clearError() {
+    const el = document.getElementById('register-error');
+    if (el) el.textContent = '';
+}
+
+function showSuccess(msg) {
+    clearError();
+    let el = document.getElementById('register-success');
+    if (!el) {
+        el = document.createElement('p');
+        el.id = 'register-success';
+        el.className = 'text-green-600 font-body-sm text-center mt-2';
+        document.getElementById('register-form').appendChild(el);
+    }
+    el.textContent = msg;
 }

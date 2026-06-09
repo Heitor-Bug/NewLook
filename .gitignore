@@ -35,3 +35,4 @@ build/
 ### Projeto ###
 .env
 application-local.properties
+.frontendbackup

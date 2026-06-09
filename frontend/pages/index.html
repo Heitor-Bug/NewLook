@@ -1,84 +1,89 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html> <!-- Declara que este documento é HTML5 -->
+<html lang="pt-BR"> <!-- Tag raiz; lang define o idioma da página -->
 <head>
+    <!-- meta charset define a codificação de caracteres (acentos, emoji, etc.) -->
     <meta charset="utf-8"/>
+    <!-- viewport controla como a página é exibida em dispositivos móveis -->
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Gerar Looks | NewLook</title>
 
+    <!-- Tailwind CDN: biblioteca CSS utilitária (classe no HTML = estilo aplicado) -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Nosso arquivo de configuração do Tailwind (cores, fontes, espaçamentos) -->
     <script src="../js/tailwind.config.js"></script>
 
+    <!--
+        Google Fonts: carrega as fontes Inter, Montserrat e Material Symbols.
+        wght / FILL são eixos variáveis da fonte (peso e preenchimento dos ícones).
+    -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <!-- Linha duplicada propositalmente para garantir fallback (pode ser removida) -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="../css/styles.css"/>
+    <!-- Nosso CSS customizado (scrollbar, chips, botões, etc.) -->
+    <link rel="stylesheet" href="../css/style.css"/>
     <style>
         @keyframes spin { to { transform: rotate(360deg); } }
         .spin { animation: spin 1s linear infinite; display: inline-block; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.5s ease forwards; }
-
-        @keyframes pulse-bar {
-            0%, 100% { opacity: 0.4; transform: scaleX(0.97); }
-            50%       { opacity: 1;   transform: scaleX(1); }
-        }
-        .pulse-bar { animation: pulse-bar 1.6s ease-in-out infinite; }
-
-        .look-card:nth-child(1) { animation-delay: 0.05s; }
-        .look-card:nth-child(2) { animation-delay: 0.18s; }
-        .look-card:nth-child(3) { animation-delay: 0.31s; }
     </style>
 </head>
+<!--
+    Classes do Tailwind no <body>:
+    - bg-surface: cor de fundo definida no tailwind.config.js
+    - text-on-surface: cor do texto principal
+    - font-body-md: fonte Inter 16px
+    - overflow-x-hidden: corta scroll horizontal
+-->
 <body class="bg-surface text-on-surface font-body-md overflow-x-hidden">
 
-<!-- ===================== SIDEBAR ===================== -->
+<!--
+    <aside>: barra lateral (sidebar) fixa à esquerda.
+    w-64: largura 256px.
+    fixed left-0 top-0: posicionada no canto superior esquerdo.
+    h-full: altura total da viewport.
+    flex flex-col: layout vertical (logo + navegação).
+    z-50: empilhada acima de outros elementos.
+-->
 <aside class="w-64 h-full fixed left-0 top-0 bg-surface border-r border-outline-variant flex flex-col py-margin-desktop px-4 gap-8 z-50">
     <div class="font-display-lg text-headline-lg tracking-tight text-primary px-4">NewLook</div>
     <nav class="flex flex-col gap-1">
-        <a data-nav="generate" href="index.html"
-           class="flex items-center gap-4 px-4 py-3 rounded-lg">
+        <!--
+            data-nav="generate": atributo customizado usado pelo JS para marcar link ativo.
+            px-4 py-3: padding horizontal 16px, vertical 12px.
+            rounded-lg: bordas arredondadas.
+        -->
+        <a data-nav="generate" href="index.html" class="flex items-center gap-4 px-4 py-3 rounded-lg">
             <span class="material-symbols-outlined">auto_awesome</span>
             <span class="font-body-md">Gerar Looks</span>
         </a>
-        <a data-nav="looks" href="looks.html"
-            class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low transition-colors duration-200 rounded-lg">
+        <a data-nav="looks" href="looks.html" class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low transition-colors rounded-lg">
              <span class="material-symbols-outlined">style</span>
              <span class="font-body-md">Meus Looks</span>
         </a>
-        <a data-nav="settings" href="settings.html"
-           class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low transition-colors duration-200">
+        <a data-nav="settings" href="settings.html" class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container-low transition-colors rounded-lg">
             <span class="material-symbols-outlined">settings</span>
             <span class="font-body-md">Configurações</span>
         </a>
     </nav>
 </aside>
 
-<!-- ===================== TOPBAR ===================== -->
+<!--
+    Topbar: barra superior fixa com botão "Sair".
+    w-[calc(100%-256px)]: largura = viewport - sidebar (256px).
+    bg-surface/80: fundo com 80% de opacidade.
+    backdrop-blur-md: efeito de desfoque no fundo (vidro fosco).
+-->
 <header class="fixed top-0 right-0 w-[calc(100%-256px)] h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-end items-center px-margin-desktop z-40">
-    <div class="flex items-center gap-6">
-
-        <!-- Avatar (só aparece se logado) -->
-        <a id="topbar-avatar-link" href="settings.html" class="hidden w-8 h-8 rounded-full overflow-hidden bg-surface-container block">
-            <!--<img id="topbar-avatar" alt="Perfil" class="w-full h-full object-cover" src=""/>-->
-        </a>
-
-        <!-- Botão Entrar (só aparece se deslogado) -->
-        <a id="topbar-login-btn" href="login.html"
-           class="hidden font-label-md uppercase tracking-wider border border-outline-variant px-4 py-2 rounded-lg text-on-surface hover:bg-surface-container-low transition-colors">
-            Entrar
-        </a>
-
-        <!-- Botão Sair (só aparece se logado) -->
-        <button id="topbar-logout-btn"
-                class="hidden font-label-md uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors"
-                onclick="handleLogout()">
-            Sair
-        </button>
-
-    </div>
+    <button onclick="handleLogout()" class="font-label-md uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors">Sair</button>
 </header>
 
-<!-- ===================== MAIN ===================== -->
+<!--
+    <main>: conteúdo principal.
+    ml-64: margem esquerda = largura da sidebar (64 = 256px).
+    pt-16: padding-top = altura da topbar (16 = 64px).
+-->
 <main class="ml-64 pt-16 min-h-screen px-margin-desktop py-margin-desktop">
     <div class="max-w-2xl mx-auto">
 
@@ -87,53 +92,52 @@
             <p class="font-body-md text-on-surface-variant">Envie sua foto e deixe nossa IA criar combinações perfeitas para você.</p>
         </header>
 
-        <!-- ---- STEPPER ---- -->
-        <div class="flex items-center justify-between mb-12 relative">
-            <div class="absolute top-[16px] left-0 w-full h-[1px] bg-outline-variant -z-10"></div>
-            <div class="flex flex-col items-center gap-2 bg-surface px-4" id="step-1-indicator">
-                <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-label-md">1</div>
-                <span class="font-label-md text-primary">Enviar foto</span>
-            </div>
-            <div class="flex flex-col items-center gap-2 bg-surface px-4" id="step-2-indicator">
-                <div class="w-8 h-8 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center font-bold text-label-md">2</div>
-                <span class="font-label-md text-on-surface-variant">Gerando looks</span>
-            </div>
-            <div class="flex flex-col items-center gap-2 bg-surface px-4" id="step-3-indicator">
-                <div class="w-8 h-8 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center font-bold text-label-md">3</div>
-                <span class="font-label-md text-on-surface-variant">Looks prontos</span>
-            </div>
-        </div>
-
-        <!-- ========================================================= -->
-        <!-- STAGE 1 — FORM                                            -->
-        <!-- ========================================================= -->
+        <!--
+            stage-form / stage-loading: dois "estágios" da página.
+            Apenas um fica visível por vez, controlado pelo JS (showStage).
+        -->
         <div id="stage-form">
+            <!-- onsubmit: chama handleSubmit() no JS quando o formulário for enviado -->
             <form id="look-form" class="space-y-8" onsubmit="handleSubmit(event)">
 
                 <!-- Upload de foto -->
                 <div>
                     <label class="font-label-md text-on-surface-variant uppercase block mb-2">Sua foto</label>
+                    <!--
+                        onclick no <div>: simula clique no input file escondido.
+                        border-dashed: borda tracejada.
+                        group: permite usar group-hover: nos filhos.
+                    -->
                     <div id="upload-area"
                          class="border-2 border-dashed border-outline-variant rounded-xl p-12 flex flex-col items-center justify-center text-center hover:border-primary transition-colors cursor-pointer group bg-surface-container-lowest"
                          onclick="document.getElementById('photo-input').click()">
                         <span id="upload-icon" class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary mb-4">person</span>
                         <p id="upload-label" class="font-headline-lg text-primary mb-1">Clique para enviar sua foto</p>
                         <p class="font-body-sm text-on-surface-variant">JPG, PNG, máximo 10MB</p>
+                        <!-- hidden: invisível até o JS exibir o preview -->
                         <img id="photo-preview" class="hidden mt-6 max-h-64 rounded-lg object-contain" alt="Preview da foto"/>
                     </div>
+                    <!-- accept: filtra apenas JPEG e PNG no seletor de arquivos -->
                     <input type="file" id="photo-input" accept="image/jpeg,image/png" class="hidden"/>
                 </div>
 
-                <!-- Estilo & Ocasião -->
+                <!-- Grid 2 colunas: Estilo + Ocasião lado a lado -->
                 <div class="grid grid-cols-2 gap-gutter">
                     <div class="space-y-2">
                         <label class="font-label-md text-on-surface-variant uppercase" for="estilo">Estilo</label>
+                        <!--
+                            <select>: caixa de seleção (dropdown).
+                            focus:border-primary: quando focado, borda fica preta.
+                        -->
                         <select id="estilo" name="estilo" class="w-full border border-outline-variant rounded-lg p-3 bg-white focus:border-primary transition-colors">
                             <option value="minimalista">Minimalista</option>
                             <option value="boho">Boho</option>
                             <option value="streetwear">Streetwear</option>
                             <option value="executivo">Executivo</option>
+                            <option value="outro">Outro</option>
                         </select>
+                        <!-- campo de texto escondido que aparece quando "Outro" é selecionado -->
+                        <input type="text" id="estilo-outro" class="hidden w-full border border-outline-variant rounded-lg p-3 bg-white mt-2" placeholder="Digite seu estilo">
                     </div>
                     <div class="space-y-2">
                         <label class="font-label-md text-on-surface-variant uppercase" for="ocasiao">Ocasião</label>
@@ -142,47 +146,65 @@
                             <option value="evento-noturno">Evento Noturno</option>
                             <option value="casual">Encontro Casual</option>
                             <option value="viagem">Viagem</option>
+                            <option value="outro">Outro</option>
                         </select>
+                        <input type="text" id="ocasiao-outro" class="hidden w-full border border-outline-variant rounded-lg p-3 bg-white mt-2" placeholder="Digite a ocasião">
                     </div>
                 </div>
 
-                <!-- Estação -->
+                <!-- Chips de estação: toggle visual em vez de dropdown -->
                 <div class="space-y-4">
-                    <label class="font-label-md text-on-surface-variant uppercase">Estação do ano</label>
+                    <label class="font-label-md text-on-surface-variant uppercase">Estação do ano (Opcional)</label>
                     <div class="flex gap-3 flex-wrap">
+                        <!--
+                            data-group / data-value: atributos data-* lidos pelo JS.
+                            chip-active: destaca visualmente o botão ativo.
+                        -->
                         <button type="button" data-group="estacao" data-value="primavera" class="chip-btn chip-active px-6 py-2 rounded font-label-md">Primavera</button>
                         <button type="button" data-group="estacao" data-value="verao"     class="chip-btn px-6 py-2 rounded font-label-md">Verão</button>
                         <button type="button" data-group="estacao" data-value="outono"    class="chip-btn px-6 py-2 rounded font-label-md">Outono</button>
                         <button type="button" data-group="estacao" data-value="inverno"   class="chip-btn px-6 py-2 rounded font-label-md">Inverno</button>
                     </div>
+                    <!-- hidden: campo invisível que armazena o valor selecionado -->
                     <input type="hidden" name="estacao" id="estacao-value" value="primavera"/>
                 </div>
 
-                <!-- Orçamento -->
+                <!-- Chips de orçamento (mesmo padrão dos chips de estação) -->
                 <div class="space-y-4">
-                    <label class="font-label-md text-on-surface-variant uppercase">Faixa de orçamento</label>
+                    <label class="font-label-md text-on-surface-variant uppercase">Faixa de orçamento (Opcional)</label>
                     <div class="flex gap-3 flex-wrap">
                         <button type="button" data-group="orcamento" data-value="0-200"   class="chip-btn px-6 py-2 rounded font-label-md">R$ 0 – 200</button>
                         <button type="button" data-group="orcamento" data-value="200-500" class="chip-btn chip-active px-6 py-2 rounded font-label-md">R$ 200 – 500</button>
                         <button type="button" data-group="orcamento" data-value="500+"    class="chip-btn px-6 py-2 rounded font-label-md">R$ 500+</button>
+                        <button type="button" data-group="orcamento" data-value="outro"   class="chip-btn px-6 py-2 rounded font-label-md">Outro</button>
                     </div>
+                    <input type="text" id="orcamento-outro" class="hidden w-full border border-outline-variant rounded-lg p-3 bg-white mt-2" placeholder="Digite seu orçamento"/>
                     <input type="hidden" name="orcamento" id="orcamento-value" value="200-500"/>
                 </div>
 
-                <!-- Cores favoritas -->
+                <!-- Cores favoritas: botões circulares + campo "Outro" -->
                 <div class="space-y-4">
-                    <label class="font-label-md text-on-surface-variant uppercase">Cores favoritas</label>
+                    <label class="font-label-md text-on-surface-variant uppercase">Cores favoritas (Opcional)</label>
                     <div class="flex gap-4 flex-wrap">
+                        <!--
+                            w-8 h-8: 32px x 32px.
+                            rounded-full: círculo perfeito.
+                            bg-*: cor de fundo inline (hex ou nome).
+                            .color-btn: classe JS para capturar clique.
+                        -->
                         <button type="button" data-color="preto"         class="color-btn w-8 h-8 rounded-full bg-black border border-outline-variant" title="Preto"></button>
                         <button type="button" data-color="branco"        class="color-btn w-8 h-8 rounded-full bg-white border border-outline-variant" title="Branco"></button>
                         <button type="button" data-color="bege"          class="color-btn w-8 h-8 rounded-full bg-[#D2B48C] border border-outline-variant" title="Bege"></button>
                         <button type="button" data-color="cinza-azulado" class="color-btn w-8 h-8 rounded-full bg-[#36454F] border border-outline-variant" title="Cinza Azulado"></button>
                         <button type="button" data-color="marrom"        class="color-btn w-8 h-8 rounded-full bg-[#704214] border border-outline-variant" title="Marrom"></button>
+                        <!-- color-btn-outro: classe separada para tratar o toggle "Outro" -->
+                        <button type="button" data-color="outro" class="color-btn-outro chip-btn px-4 py-2 rounded font-label-md">Outro</button>
                     </div>
+                    <input type="text" id="cores-outro" class="hidden w-full border border-outline-variant rounded-lg p-3 bg-white mt-2" placeholder="Digite suas cores favoritas"/>
                     <input type="hidden" name="cores" id="cores-value" value=""/>
                 </div>
 
-                <!-- Observações -->
+                <!-- Área de texto para observações -->
                 <div class="space-y-2">
                     <label class="font-label-md text-on-surface-variant uppercase" for="observacoes">Observações (opcional)</label>
                     <textarea id="observacoes" name="observacoes"
@@ -191,7 +213,7 @@
                               rows="4"></textarea>
                 </div>
 
-                <!-- Submit -->
+                <!-- Botão principal de submit -->
                 <button type="submit" id="submit-btn"
                         class="btn-press w-full py-4 bg-primary text-on-primary font-headline-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity mt-8 rounded-lg">
                     Gerar meus looks
@@ -200,161 +222,24 @@
             </form>
         </div>
 
-        <!-- ========================================================= -->
-        <!-- STAGE 2 — LOADING                                         -->
-        <!-- ========================================================= -->
+        <!-- Tela de loading (aparece enquanto a IA gera o look) -->
         <div id="stage-loading" class="hidden">
-            <div class="flex flex-col items-center justify-center py-24 gap-10 fade-in">
-
-                <div class="relative w-24 h-24 flex items-center justify-center">
-                    <div class="absolute inset-0 rounded-full border-4 border-outline-variant"></div>
-                    <div class="absolute inset-0 rounded-full border-4 border-t-primary spin"></div>
-                    <span class="material-symbols-outlined text-3xl text-primary">auto_awesome</span>
-                </div>
-
-                <div class="text-center space-y-2">
-                    <h2 class="font-headline-lg text-headline-lg text-primary" id="loading-title">Analisando sua foto…</h2>
-                    <p class="font-body-md text-on-surface-variant" id="loading-subtitle">Nossa IA está identificando seu perfil de estilo.</p>
-                </div>
-
-                <div class="w-full max-w-sm space-y-3" id="loading-steps">
-                    <div class="loading-step flex items-center gap-3" data-index="0">
-                        <div class="step-dot w-2 h-2 rounded-full bg-outline-variant flex-shrink-0"></div>
-                        <div class="flex-1">
-                            <div class="h-2 rounded-full bg-outline-variant overflow-hidden">
-                                <div class="step-bar h-full bg-primary rounded-full w-0 transition-all duration-700"></div>
-                            </div>
-                        </div>
-                        <span class="font-label-md text-on-surface-variant w-36 text-right step-label">Lendo a foto</span>
-                    </div>
-                    <div class="loading-step flex items-center gap-3" data-index="1">
-                        <div class="step-dot w-2 h-2 rounded-full bg-outline-variant flex-shrink-0"></div>
-                        <div class="flex-1">
-                            <div class="h-2 rounded-full bg-outline-variant overflow-hidden">
-                                <div class="step-bar h-full bg-primary rounded-full w-0 transition-all duration-700"></div>
-                            </div>
-                        </div>
-                        <span class="font-label-md text-on-surface-variant w-36 text-right step-label">Avaliando preferências</span>
-                    </div>
-                    <div class="loading-step flex items-center gap-3" data-index="2">
-                        <div class="step-dot w-2 h-2 rounded-full bg-outline-variant flex-shrink-0"></div>
-                        <div class="flex-1">
-                            <div class="h-2 rounded-full bg-outline-variant overflow-hidden">
-                                <div class="step-bar h-full bg-primary rounded-full w-0 transition-all duration-700"></div>
-                            </div>
-                        </div>
-                        <span class="font-label-md text-on-surface-variant w-36 text-right step-label">Montando os looks</span>
-                    </div>
-                </div>
-
+            <div class="flex flex-col items-center justify-center py-24 gap-6 fade-in">
+                <!-- Spinner: borda circular animada (classe spin = rotação infinita) -->
+                <div class="w-16 h-16 border-4 border-outline-variant border-t-primary rounded-full spin"></div>
+                <p class="font-body-md text-on-surface-variant text-center">Gerando look... pode demorar um pouco</p>
             </div>
-        </div>
-
-        <!-- ========================================================= -->
-        <!-- STAGE 3 — RESULTS                                         -->
-        <!-- ========================================================= -->
-        <div id="stage-results" class="hidden">
-
-            <div class="flex items-center justify-between mb-8 fade-in">
-                <div>
-                    <h2 class="font-headline-lg text-headline-lg text-primary mb-1">Seu look gerado</h2>
-                    <p class="font-body-sm text-on-surface-variant" id="results-meta">criado pela IA com base no seu perfil</p>
-                </div>
-                <button onclick="resetToForm()"
-                        class="btn-press flex items-center gap-2 border border-outline-variant px-4 py-2 rounded-lg font-label-md text-on-surface-variant hover:bg-surface-container-low transition-colors">
-                    <span class="material-symbols-outlined text-base">refresh</span>
-                    Nova geração
-                </button>
-            </div>
-
-            <!--
-                ÁREA DE RESULTADO — preenchida via renderResults() em js/index.js
-                O backend deve retornar:
-                {
-                  "imagem_url": "https://...",
-                  "descricao": "Texto explicando as peças escolhidas pela IA."
-                }
-                Chame renderResults(data) após receber a resposta.
-            -->
-            <div id="results-container" class="fade-in">
-
-                <!-- Imagem gerada pela IA -->
-                <div id="result-image-wrapper" class="hidden rounded-xl overflow-hidden bg-surface-container-lowest border border-outline-variant mb-6">
-                    <img id="result-image" src="" alt="Look gerado pela IA" class="w-full object-cover max-h-[560px]"/>
-                </div>
-
-                <!-- Texto descritivo das peças -->
-                <div id="result-text-wrapper" class="hidden bg-surface-container-lowest border border-outline-variant rounded-xl p-6 space-y-3">
-                    <div class="flex items-center gap-2 text-primary mb-1">
-                        <span class="material-symbols-outlined text-[18px]">auto_awesome</span>
-                        <span class="font-label-md uppercase tracking-wider">Peças selecionadas pela IA</span>
-                    </div>
-                    <p id="result-description" class="font-body-md text-on-surface leading-relaxed"></p>
-                </div>
-
-                <!-- Erro de API -->
-                <div id="results-error" class="hidden mt-4 p-4 bg-error-container/20 border border-error/20 rounded-lg text-error font-body-sm"></div>
-
-            </div>
-
-            <!-- Feedback -->
-            <div class="mt-12 py-8 border-t border-outline-variant text-center fade-in">
-                <p class="font-body-md text-on-surface-variant mb-6">Gostou do look?</p>
-                <div class="flex justify-center gap-8">
-                    <button onclick="sendFeedback('positivo')" class="flex flex-col items-center gap-2 group">
-                        <div class="p-4 rounded-full bg-surface-container-low group-hover:bg-primary group-hover:text-on-primary transition-all duration-300">
-                            <span class="material-symbols-outlined">thumb_up</span>
-                        </div>
-                        <span class="font-label-md text-on-surface-variant">Adorei</span>
-                    </button>
-                    <button onclick="sendFeedback('negativo')" class="flex flex-col items-center gap-2 group">
-                        <div class="p-4 rounded-full bg-surface-container-low group-hover:bg-primary group-hover:text-on-primary transition-all duration-300">
-                            <span class="material-symbols-outlined">thumb_down</span>
-                        </div>
-                        <span class="font-label-md text-on-surface-variant">Melhorar</span>
-                    </button>
-                </div>
-            </div>
-
         </div>
 
     </div>
 </main>
 
-<!-- ===================== FOOTER ===================== 
-<footer class="w-[calc(100%-256px)] ml-64 bg-surface border-t border-outline-variant flex justify-between items-center py-6 px-margin-desktop">
-    <div class="font-label-md text-secondary">© 2026 NewLook. Em conformidade com a LGPD.</div>
-    <div class="flex gap-8">
-        <a href="#" class="font-label-md text-on-secondary-fixed-variant hover:text-primary transition-colors">Privacidade</a>
-        <a href="#" class="font-label-md text-on-secondary-fixed-variant hover:text-primary transition-colors">Termos de Uso</a>
-        <a href="#" class="font-label-md text-on-secondary-fixed-variant hover:text-primary transition-colors">Cookies</a>
-    </div>
-    <div class="font-label-md text-primary font-bold">NewLook</div>
-</footer>-->
-
-<script src="../js/nav.js"></script>
-<script src="../js/index.js"></script>
+<!-- Scripts carregados no final para não bloquear o render -->
+<script src="../js/nav.js"></script>  <!-- Função handleLogout() -->
+<script src="../js/index.js"></script> <!-- Lógica da página (upload, chips, submit) -->
 <script>
-    // Auth UI — troca entre estado logado e deslogado
-    // Chame updateAuthUI(true/false) do seu index.js após verificar sessão
-    function updateAuthUI(isLoggedIn) {
-        document.getElementById('topbar-avatar-link').classList.toggle('hidden', !isLoggedIn);
-        document.getElementById('topbar-logout-btn').classList.toggle('hidden', !isLoggedIn);
-        document.getElementById('topbar-login-btn').classList.toggle('hidden', isLoggedIn);
-    }
-
-    function handleLogout() {
-        localStorage.removeItem('newlook_userId');
-        localStorage.removeItem('newlook_nome');
-        localStorage.removeItem('newlook_email');
-        localStorage.removeItem('newlook_genero');
-        localStorage.removeItem('newlook_avatar');
-        window.location.href = 'login.html';
-    }
-
-    // Inicializa estado (adapte conforme sua lógica de sessão)
-    const isLoggedIn = !!(localStorage.getItem('newlook_token') || sessionStorage.getItem('newlook_token'));
-    updateAuthUI(isLoggedIn);
+    // Adiciona a classe .nav-active ao link correspondente
+    document.querySelector('[data-nav="generate"]').classList.add('nav-active');
 </script>
 </body>
 </html>

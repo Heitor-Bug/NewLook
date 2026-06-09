@@ -1,29 +1,19 @@
-/* ============================================
-   NewLook - Shared Navigation Logic
-   ============================================ */
+/*
+    Função de logout compartilhada entre todas as páginas.
+    Carregada via <script src="../js/nav.js"> em cada página.
 
-/**
- * Marks the current page's nav link as active.
- * Call this on each page after DOM is ready.
- * @param {string} activePage - one of: 'index', 'settings', 'login', 'register'
- */
-function setActiveNav(activePage) {
-    const navMap = {
-        index:    '[data-nav="generate"]',
-        settings: '[data-nav="settings"]',
-    };
-    const selector = navMap[activePage];
-    if (!selector) return;
-    const el = document.querySelector(selector);
-    if (el) el.classList.add('nav-active');
-}
-
+    localStorage: armazenamento persistente no navegador do usuário.
+    removeItem(): deleta uma chave do localStorage.
+    window.location.href: redireciona para outra página.
+*/
 function handleLogout() {
+    // Limpa todos os dados da sessão do usuário
     localStorage.removeItem('newlook_userId');
     localStorage.removeItem('newlook_nome');
     localStorage.removeItem('newlook_email');
     localStorage.removeItem('newlook_genero');
     localStorage.removeItem('newlook_avatar');
     localStorage.removeItem('newlook_senha');
+    // Redireciona para a tela de login
     window.location.href = 'login.html';
 }
