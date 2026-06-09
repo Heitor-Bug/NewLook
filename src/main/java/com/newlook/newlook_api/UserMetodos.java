@@ -81,6 +81,7 @@ public class UserMetodos {
         return 0;
     }
 
+    // Metodo para editar o Usuario no bd
     public void editarUsuario(int id, String nome, String email, String senha, String genero) {
         String Query = "UPDATE Usuarios SET nome = ?, email = ?, senha = ?, genero = ? WHERE id = ?;";
 
@@ -102,6 +103,7 @@ public class UserMetodos {
 
     }
 
+    // Metodo para buscar um usuario especifico
     public String[] buscarUsuario(int id) {
     String Query = "SELECT nome, email, genero FROM Usuarios WHERE id = ?;";
 

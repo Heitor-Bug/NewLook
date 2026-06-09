@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+
+// Esta classe serve para configurar o spring boot para aceitar requisições do frontend (que estão em outra porta)
 @Configuration
 public class CorsConfig {
 

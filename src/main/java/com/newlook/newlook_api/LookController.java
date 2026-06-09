@@ -25,8 +25,9 @@ public class LookController {
         return "API do Newlook funcionando!";
     }
 
-    // Função responde REQUEST tipo POST em /makelook
+    // Endpoint que gera o look, Função responde REQUEST tipo POST em /post/foto
     @PostMapping(value = "/post/foto", produces = MediaType.TEXT_PLAIN_VALUE)
+    // ResponseEntity<String> serve para custommizar e representar a resposta do HTTP
     public ResponseEntity<String> makelook(
             @RequestParam("fotoUsuario") MultipartFile fotoUsuario,
             @RequestParam("idUsuario") int idUsuario,
@@ -50,7 +51,7 @@ public class LookController {
                     idUsuario, analiseCompleta, genero, estilo, ocasiao, estacaoAno, faixaPreco, coresFavoritas,
                     preferenciasAdicionais);
 
-            System.out.println("[3/3] Criando a nova imagem do Look com Gemini 3.1-Flash-Image...");
+            System.out.println("[3/3] Criando a nova imagem do Look");
             lookMetodos.gerarImagemLook(fotoUsuario, idLookGerado, analiseCompleta);
             System.out.println("--- Fluxo Concluído com Sucesso! Devolvendo imagem. ---");
 
@@ -62,16 +63,19 @@ public class LookController {
         }
     }
 
+    // Endpoint para puxar os looks do Usuario
     @GetMapping("/get/looks")
     public String getLooks(@RequestParam("idUsuario") int idUsuario) {
         return lookMetodos.buscarLooks(idUsuario);
     }
 
+    // Endpoint para puxar os detalhes de um look em especifico
     @GetMapping("/get/look")
     public String getLook(@RequestParam("idLook") int idLook) {
         return lookMetodos.buscarDetalhesLook(idLook);
     }
 
+    // Endpoint para deletar um look
     @PostMapping("/post/look/deletar")
     public String deletarLook(@RequestParam("id") int id) {
         lookMetodos.ExcluirLook(id);

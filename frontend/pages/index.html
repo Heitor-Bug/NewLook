@@ -59,7 +59,7 @@
 
         <!-- Avatar (só aparece se logado) -->
         <a id="topbar-avatar-link" href="settings.html" class="hidden w-8 h-8 rounded-full overflow-hidden bg-surface-container block">
-            <img id="topbar-avatar" alt="Perfil" class="w-full h-full object-cover" src=""/>
+            <!--<img id="topbar-avatar" alt="Perfil" class="w-full h-full object-cover" src=""/>-->
         </a>
 
         <!-- Botão Entrar (só aparece se deslogado) -->
@@ -321,7 +321,7 @@
     </div>
 </main>
 
-<!-- ===================== FOOTER ===================== -->
+<!-- ===================== FOOTER ===================== 
 <footer class="w-[calc(100%-256px)] ml-64 bg-surface border-t border-outline-variant flex justify-between items-center py-6 px-margin-desktop">
     <div class="font-label-md text-secondary">© 2026 NewLook. Em conformidade com a LGPD.</div>
     <div class="flex gap-8">
@@ -330,7 +330,7 @@
         <a href="#" class="font-label-md text-on-secondary-fixed-variant hover:text-primary transition-colors">Cookies</a>
     </div>
     <div class="font-label-md text-primary font-bold">NewLook</div>
-</footer>
+</footer>-->
 
 <script src="../js/nav.js"></script>
 <script src="../js/index.js"></script>
@@ -344,9 +344,11 @@
     }
 
     function handleLogout() {
-        // Limpe a sessão/token aqui conforme seu backend
-        localStorage.removeItem('newlook_token');
-        sessionStorage.removeItem('newlook_token');
+        localStorage.removeItem('newlook_userId');
+        localStorage.removeItem('newlook_nome');
+        localStorage.removeItem('newlook_email');
+        localStorage.removeItem('newlook_genero');
+        localStorage.removeItem('newlook_avatar');
         window.location.href = 'login.html';
     }
 

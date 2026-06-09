@@ -11,7 +11,7 @@ import java.sql.SQLException;
 // serve para ajudar a ler o resultado do sql
 import java.sql.ResultSet;
 ////// serve para converter bytes em texto base64
-import java.util.Base64;
+//// import java.util.Base64;
 import java.util.List;
 import org.springframework.stereotype.Service;
 // Fala que vai receber arquivo
@@ -29,6 +29,7 @@ public class LookMetodos {
     // Salvando um STRING com o valor da URL do db
     private final String URL = "jdbc:sqlite:dbNewLook.db";
 
+    // Metodo para excluir o look diretamente no bd
     public void ExcluirLook(int id) {
         String Query = "DELETE FROM Looks WHERE id = ?;";
 
@@ -44,6 +45,7 @@ public class LookMetodos {
         }
     }
 
+    // Metodo para analisar a foto enviada pelo usuario e gerar um relatorio
     public String analisarFoto(MultipartFile foto, String genero, String estilo, String ocasiao, String estacaoAno,
             String faixaPreco, String coresFavoritas) {
         try {
@@ -72,6 +74,7 @@ public class LookMetodos {
         }
     }
 
+    // Metodo para gerar um look baseado nas informações enviadas do usuario e no relatorio gerado anteriormente
     public int gerarLook(int idUsuario, String analiseFoto, String genero, String estilo,
             String ocasiao, String estacaoAno, String faixaPreco, String coresFavoritas,
             String preferenciasAdicionais) {
@@ -93,7 +96,7 @@ public class LookMetodos {
                         null);
                 String respostaJson = response.text();
 
-                // Chama
+                // Biblioteca para formatar o json recebido pelo gemini
                 com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
                 com.fasterxml.jackson.databind.JsonNode json = mapper.readTree(respostaJson);
 
@@ -106,6 +109,7 @@ public class LookMetodos {
 
                 int idLook;
 
+                // Gravando o look no bd
                 try (Connection conn = DriverManager.getConnection(URL);
                         PreparedStatement pstmt = conn.prepareStatement(queryLook,
                                 java.sql.Statement.RETURN_GENERATED_KEYS)) {
@@ -124,6 +128,7 @@ public class LookMetodos {
                     idLook = rs.next() ? rs.getInt(1) : -1;
                 }
 
+                // Tratamento de erro
                 if (idLook == -1) {
                     System.out.println("Erro ao obter id do look inserido");
                     return -1;
@@ -134,6 +139,7 @@ public class LookMetodos {
                         VALUES (?, ?, ?, ?, ?, ?, ?);
                         """;
 
+                // Gravando as roupas no bd
                 try (Connection conn = DriverManager.getConnection(URL);
                         PreparedStatement pstmt = conn.prepareStatement(queryRoupa)) {
 
@@ -160,6 +166,7 @@ public class LookMetodos {
         }
     }
 
+    // Metodo para gerar a imagem do usuario utilizando o look
     public void gerarImagemLook(MultipartFile foto, int idLook, String analiseFoto) {
         try {
             // Definindo a query do bd
@@ -247,6 +254,7 @@ public class LookMetodos {
         }
     }
 
+    // Metodo para buscar todos os looks de um usuario
     public String buscarLooks(int idUsuario) {
         String query = """
                 SELECT id, nome, estilo, ocasiao, estacao_ano, faixa_preco
@@ -259,6 +267,7 @@ public class LookMetodos {
             pstmt.setInt(1, idUsuario);
             ResultSet rs = pstmt.executeQuery();
 
+            // Biblioteca para Formatação do array
             com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
             com.fasterxml.jackson.databind.node.ArrayNode array = mapper.createArrayNode();
 
@@ -273,6 +282,7 @@ public class LookMetodos {
                 array.add(look);
             }
 
+            // Retornando o array como String
             return mapper.writeValueAsString(array);
 
         } catch (Exception e) {
@@ -281,11 +291,13 @@ public class LookMetodos {
         }
     }
 
+    // Metodo para buscar o look e suas peças
     public String buscarDetalhesLook(int idLook) {
         try (Connection conn = DriverManager.getConnection(URL)) {
 
             com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
             com.fasterxml.jackson.databind.node.ObjectNode resultado = mapper.createObjectNode();
+
 
             // Busca o look
             String queryLook = "SELECT * FROM Looks WHERE id = ?;";
@@ -301,6 +313,11 @@ public class LookMetodos {
                     resultado.put("faixa_preco", rs.getString("faixa_preco"));
                     resultado.put("cores_favoritas", rs.getString("cores_favoritas"));
                     resultado.put("preferencias_adicionais", rs.getString("preferencias_adicionais"));
+                    byte[] imagem = rs.getBytes("imagem");
+                    if (imagem != null) {
+                        String imagemBase64 = java.util.Base64.getEncoder().encodeToString(imagem);
+                        resultado.put("imagem", imagemBase64);
+                    }
                 }
             }
 
@@ -331,5 +348,4 @@ public class LookMetodos {
         }
     }
 
-    
 }

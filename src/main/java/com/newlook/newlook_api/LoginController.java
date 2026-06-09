@@ -58,6 +58,7 @@ public class LoginController {
         }
     }
 
+    // Endpoint para editar um usuario
     @PostMapping("/post/user/edit")
     public String editUser(
             @RequestParam("id") int id,
@@ -75,6 +76,7 @@ public class LoginController {
         }
     }
 
+    // Endpoint para buscar informações de um usuario
     @GetMapping("/get/user")
     public String getUser(@RequestParam("id") int id) {
         UserMetodos user = new UserMetodos();

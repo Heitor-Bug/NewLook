@@ -51,7 +51,7 @@
 <header class="fixed top-0 right-0 w-[calc(100%-256px)] h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-end items-center px-margin-desktop z-40">
     <div class="flex items-center gap-6">
         <a id="topbar-avatar-link" href="settings.html" class="hidden w-8 h-8 rounded-full overflow-hidden bg-surface-container block">
-            <img id="topbar-avatar" alt="Perfil" class="w-full h-full object-cover" src=""/>
+            <!--<img id="topbar-avatar" alt="Perfil" class="w-full h-full object-cover" src=""/>-->
         </a>
         <a id="topbar-login-btn" href="login.html"
            class="hidden font-label-md uppercase tracking-wider border border-outline-variant px-4 py-2 rounded-lg text-on-surface hover:bg-surface-container-low transition-colors">
@@ -139,7 +139,9 @@
                             <p id="modal-preco" class="font-body-md text-on-surface"></p>
                         </div>
                     </div>
-
+                    <div id="result-image-wrapper" class="hidden rounded-xl overflow-hidden mb-4">
+                        <img id="result-image" src="" alt="Look gerado" class="w-full object-cover"/>
+                    </div>
                     <!-- Peças -->
                     <div>
                         <div class="flex items-center gap-2 text-primary mb-4">
@@ -171,7 +173,7 @@
     </div>
 </main>
 
-<!-- ===================== FOOTER ===================== -->
+<!-- ===================== FOOTER ===================== 
 <footer class="w-[calc(100%-256px)] ml-64 bg-surface border-t border-outline-variant flex justify-between items-center py-6 px-margin-desktop">
     <div class="font-label-md text-secondary">© 2026 NewLook. Em conformidade com a LGPD.</div>
     <div class="flex gap-8">
@@ -180,7 +182,7 @@
         <a href="#" class="font-label-md text-on-secondary-fixed-variant hover:text-primary transition-colors">Cookies</a>
     </div>
     <div class="font-label-md text-primary font-bold">NewLook</div>
-</footer>
+</footer>-->
 
 <style>
     @keyframes spin { to { transform: rotate(360deg); } }

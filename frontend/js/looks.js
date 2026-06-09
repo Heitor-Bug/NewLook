@@ -104,7 +104,15 @@ async function abrirModal(idLook) {
         document.getElementById('modal-preco').textContent   = look.faixa_preco
             ? `R$ ${look.faixa_preco}`
             : '—';
-
+        const resultImageWrapper = document.getElementById('result-image-wrapper');
+        const resultImage = document.getElementById('result-image');
+        if (look.imagem) {
+            resultImage.src = `data:image/jpeg;base64,${look.imagem}`;
+            resultImageWrapper.classList.remove('hidden');
+        } else {
+            resultImageWrapper.classList.add('hidden');
+        }
+        
         // Renderiza as roupas
         const roupasEl = document.getElementById('modal-roupas');
         roupasEl.innerHTML = '';
