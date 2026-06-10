@@ -31,29 +31,43 @@ Aplicação web que utiliza inteligência artificial (Google Gemini) para analis
 ### Pré-requisitos
 
 - JDK 21
-- Maven (ou usar o wrapper incluso)
+- Maven (ou o wrapper `mvnw.cmd` incluso)
 - Chave de API do Google Gemini (`GOOGLE_API_KEY`)
 
-### Passos
+---
 
-```bash
-# 1. Configurar a chave da API
-#    Windows PowerShell:
-#    $env:GOOGLE_API_KEY = "sua-chave-aqui"
-#
-#    Linux/macOS:
-#    export GOOGLE_API_KEY="sua-chave-aqui"
+### Backend — Opção 1: PowerShell
 
-# 2. Executar a aplicação
-./mvnw spring-boot:run    # Linux/macOS
-mvnw.cmd spring-boot:run  # Windows
-```
+1. Abra o **PowerShell** e navegue até a pasta do projeto (`newlook-api/`)
+2. Configure a chave da API:
+   ```powershell
+   $env:GOOGLE_API_KEY='sua-chave-aqui'
+   ```
+3. Execute a aplicação:
+   ```powershell
+   mvnw.cmd spring-boot:run
+   ```
+4. A API sobe em `http://localhost:8080`
 
-A API sobe em `http://localhost:8080`.
+### Backend — Opção 2: VS Code
+
+1. Abra a pasta do projeto no **VS Code**
+2. Abra o terminal integrado (`Ctrl + '`)
+3. No terminal, configure a chave da API:
+   ```powershell
+   $env:GOOGLE_API_KEY='sua-chave-aqui'
+   ```
+4. Execute a aplicação de uma das formas:
+   - No terminal: `mvnw.cmd spring-boot:run`
+   - Ou vá até `src/main/java/com/newlook/newlook_api/NewlookApiApplication.java` e clique em **Run Java** (play)
+
+---
 
 ### Frontend
 
-Abra o arquivo `frontend/pages/login.html` no navegador ou use o Live Server do VS Code na porta `5500`.
+1. Com o backend rodando, abra a pasta `frontend/` no VS Code
+2. Clique com direito em `frontend/pages/login.html` → **Open with Live Server**
+3. O site abre em `http://127.0.0.1:5500`
 
 ---
 
