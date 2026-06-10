@@ -14,7 +14,6 @@
 | _José Arthur Vicente Oliveira_ |
 | _Josué Luís Pimenta Alecrim_ |
 | _Yasmin Louise Fontes Guimarães_ |
-| _Charles Natividade da Silva_ |
 
 ---
 
