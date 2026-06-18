@@ -57,7 +57,7 @@ Aplicação web que utiliza inteligência artificial (Google Gemini) para analis
    $env:GOOGLE_API_KEY='sua-chave-aqui'
    ```
 4. Execute a aplicação de uma das formas:
-   - No terminal: `mvnw.cmd spring-boot:run`
+   - No terminal: `mvn spring-boot:run`
    - Ou vá até `src/main/java/com/newlook/newlook_api/NewlookApiApplication.java` e clique em **Run Java** (play)
 
 ---
